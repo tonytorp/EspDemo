@@ -2,6 +2,7 @@ package com.example.demosovellus
 
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -22,10 +23,17 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -72,64 +80,76 @@ fun EspControllerScreen() {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .background(Color(0xFFEEEEEE)), // Vaaleanharmaa taustaväri
-        horizontalAlignment = Alignment.CenterHorizontally // Keskitetään sisältö vaakasuunnassa
+            .background(Color(0xFFEEEEEE)),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(20.dp))
         Header()
         Spacer(modifier = Modifier.height(20.dp))
 
         Box(
-            modifier = Modifier
-                .fillMaxWidth(), // Vie kaiken jäljellä olevan tilan
-            contentAlignment = Alignment.Center // Keskitetään sisältö
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
         ) {
-            Button(
-                onClick = { /* Do something! */ },
-                modifier = Modifier.size(120.dp), // Asetetaan koko
-                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray) // Poistetaan pyöristetyt kulmat ja lisätään vaaleanharmaa tausta
-            ) {
-                Text("Vapautus")
-            }
+            ControlButton("Vapautus", "vapautus", "release_vapautus")
         }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween // Jakaa tilan tasaisesti
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
-                onClick = { /* Do something! */ },
-                modifier = Modifier.size(120.dp), // Asetetaan koko
-                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray) // Poistetaan pyöristetyt kulmat ja lisätään vaaleanharmaa tausta
-            ) {
-                Text("Eteen")
-            }
-            Button(
-                onClick = { /* Do something! */ },
-                modifier = Modifier.size(120.dp), // Asetetaan koko
-                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray) // Poistetaan pyöristetyt kulmat ja lisätään vaaleanharmaa tausta
-            ) {
-                Text("Taakse")
-            }
+            ControlButton("Eteen", "eteen", "release_eteen")
+            ControlButton("Taakse", "taakse", "release_taakse")
         }
 
-        Button(
-            onClick = { /* Do something! */ },
-            modifier = Modifier.size(120.dp), // Asetetaan koko
-            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray) // Poistetaan pyöristetyt kulmat ja lisätään vaaleanharmaa tausta
-        ) {
-            Text("Kuormitus")
-        }
+        ControlButton("Kuormitus", "kuormitus", "release_kuormitus")
     }
 }
 
-fun sendRequestCoroutine(url: String) {
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun ControlButton(label: String, command: String, releaseCommand: String) {
+    var isPressed by remember { mutableStateOf(false) }  // Seuraa, onko nappi painettu alas
+
+    Box(
+        modifier = Modifier
+            .size(120.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(if (isPressed) Color.DarkGray else Color.LightGray) // Vaihtaa väriä
+            .pointerInteropFilter { event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        isPressed = true  // Muuttaa tilan painetuksi
+                        sendRequestCoroutine(command)
+                        true
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        isPressed = false  // Palauttaa alkuperäisen tilan
+                        sendRequestCoroutine(releaseCommand)
+                        true
+                    }
+                    else -> false
+                }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = label,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+    }
+}
+
+fun sendRequestCoroutine(command: String) {
+    val url = "http://192.168.31.69/$command"
     CoroutineScope(Dispatchers.IO).launch {
         try {
             val connection = URL(url).openConnection() as HttpURLConnection
             connection.requestMethod = "GET"
-            connection.connectTimeout = 5000
-            connection.readTimeout = 5000
+            connection.connectTimeout = 500
+            connection.readTimeout = 500
 
             val responseCode = connection.responseCode
             val responseMessage = if (responseCode == 200) "Success" else "Error: $responseCode"
@@ -141,8 +161,6 @@ fun sendRequestCoroutine(url: String) {
         }
     }
 }
-
-
 
 
 
