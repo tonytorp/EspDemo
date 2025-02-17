@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
@@ -58,30 +59,53 @@ fun Header() {
 }
 
 @Composable
-fun EspControllerScreen(){
+fun EspControllerScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-    )
-    {
+        horizontalAlignment = Alignment.CenterHorizontally // Keskitetään sisältö vaakasuunnassa
+    ) {
         Spacer(modifier = Modifier.height(20.dp))
         Header()
         Spacer(modifier = Modifier.height(20.dp))
-        Button( onClick = { /* Do something! */ } ) {
-            Text("Vapautus")
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(), // Vie kaiken jäljellä olevan tilan
+            contentAlignment = Alignment.Center // Keskitetään sisältö
+        ) {
+            Button(
+                onClick = { /* Do something! */ },
+                modifier = Modifier.size(120.dp) // Asetetaan koko
+            ) {
+                Text("Vapautus")
+            }
         }
-        Row() {
-            Button( onClick = { /* Do something! */ } ) {
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween // Jakaa tilan tasaisesti
+        ) {
+            Button(
+                onClick = { /* Do something! */ },
+                modifier = Modifier.size(120.dp) // Asetetaan koko
+            ) {
                 Text("Eteen")
             }
-            Button( onClick = { /* Do something! */ } ) {
+            Button(
+                onClick = { /* Do something! */ },
+                modifier = Modifier.size(120.dp) // Asetetaan koko
+            ) {
                 Text("Taakse")
             }
         }
-        Button( onClick = { /* Do something! */ } ) {
+
+        Button(
+            onClick = { /* Do something! */ },
+            modifier = Modifier.size(120.dp) // Asetetaan koko
+        ) {
             Text("Kuormitus")
         }
-
     }
 }
