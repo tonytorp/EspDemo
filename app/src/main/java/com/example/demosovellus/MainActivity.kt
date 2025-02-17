@@ -85,7 +85,7 @@ fun EspControllerScreen() {
     ) {
         Spacer(modifier = Modifier.height(20.dp))
         Header()
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(300.dp))
 
         Box(
             modifier = Modifier.fillMaxWidth(),
