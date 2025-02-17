@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -63,7 +64,8 @@ fun EspControllerScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .background(Color(0xFFEEEEEE)), // Vaaleanharmaa taustaväri
         horizontalAlignment = Alignment.CenterHorizontally // Keskitetään sisältö vaakasuunnassa
     ) {
         Spacer(modifier = Modifier.height(20.dp))
@@ -77,7 +79,8 @@ fun EspControllerScreen() {
         ) {
             Button(
                 onClick = { /* Do something! */ },
-                modifier = Modifier.size(120.dp) // Asetetaan koko
+                modifier = Modifier.size(120.dp), // Asetetaan koko
+                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray) // Poistetaan pyöristetyt kulmat ja lisätään vaaleanharmaa tausta
             ) {
                 Text("Vapautus")
             }
@@ -89,13 +92,15 @@ fun EspControllerScreen() {
         ) {
             Button(
                 onClick = { /* Do something! */ },
-                modifier = Modifier.size(120.dp) // Asetetaan koko
+                modifier = Modifier.size(120.dp), // Asetetaan koko
+                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray) // Poistetaan pyöristetyt kulmat ja lisätään vaaleanharmaa tausta
             ) {
                 Text("Eteen")
             }
             Button(
                 onClick = { /* Do something! */ },
-                modifier = Modifier.size(120.dp) // Asetetaan koko
+                modifier = Modifier.size(120.dp), // Asetetaan koko
+                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray) // Poistetaan pyöristetyt kulmat ja lisätään vaaleanharmaa tausta
             ) {
                 Text("Taakse")
             }
@@ -103,7 +108,8 @@ fun EspControllerScreen() {
 
         Button(
             onClick = { /* Do something! */ },
-            modifier = Modifier.size(120.dp) // Asetetaan koko
+            modifier = Modifier.size(120.dp), // Asetetaan koko
+            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray) // Poistetaan pyöristetyt kulmat ja lisätään vaaleanharmaa tausta
         ) {
             Text("Kuormitus")
         }
