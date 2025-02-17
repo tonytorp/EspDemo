@@ -1,6 +1,7 @@
 package com.example.demosovellus
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -29,6 +30,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.net.HttpURLConnection
+import java.net.URL
+import kotlin.concurrent.thread
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,3 +122,29 @@ fun EspControllerScreen() {
         }
     }
 }
+
+fun sendRequestCoroutine(url: String) {
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val connection = URL(url).openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.connectTimeout = 5000
+            connection.readTimeout = 5000
+
+            val responseCode = connection.responseCode
+            val responseMessage = if (responseCode == 200) "Success" else "Error: $responseCode"
+
+            connection.disconnect()
+            Log.d("ESPController", "Response: $responseMessage")
+        } catch (e: Exception) {
+            Log.e("ESPController", "Request failed", e)
+        }
+    }
+}
+
+
+
+
+
+
+
